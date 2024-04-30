@@ -2,15 +2,15 @@ package com.spring.blogapp_Springboot.articles;
 
 import com.spring.blogapp_Springboot.articles.dtos.CreateArticleRequest;
 import com.spring.blogapp_Springboot.articles.dtos.UpdateArticleRequest;
-import com.spring.blogapp_Springboot.users.UserService;
+import com.spring.blogapp_Springboot.users.UsersService;
 import com.spring.blogapp_Springboot.users.UsersRepository;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ArticleService {
+public class ArticlesService {
     private ArticlesRepository articlesRepository;
     private UsersRepository usersRepository;
-    public ArticleService(ArticlesRepository articlesRepository, UsersRepository usersRepository) {
+    public ArticlesService(ArticlesRepository articlesRepository, UsersRepository usersRepository) {
         this.articlesRepository = articlesRepository;
         this.usersRepository = usersRepository;
     }
@@ -25,7 +25,7 @@ public class ArticleService {
     }
 
     public ArticleEntity createArticle(CreateArticleRequest req, Long autherId) {
-        var author = usersRepository.findById(autherId).orElseThrow(()->new UserService.UserNotFoundException(autherId));
+        var author = usersRepository.findById(autherId).orElseThrow(()->new UsersService.UserNotFoundException(autherId));
      return articlesRepository.save(ArticleEntity.builder()
              .title(req.getTitle())
              .slug(req.getTitle().toLowerCase().replaceAll("\\s+", "-"))
@@ -36,7 +36,7 @@ public class ArticleService {
     }
 
     public ArticleEntity updateArticle(Long articleId, UpdateArticleRequest req) {
-        var article = articlesRepository.findById(articleId).orElseThrow(()->new ArticleService.ArticleNotFoundException(articleId));;
+        var article = articlesRepository.findById(articleId).orElseThrow(()->new ArticlesService.ArticleNotFoundException(articleId));;
 
         if(req.getTitle() != null){
             article.setTitle(req.getTitle());
